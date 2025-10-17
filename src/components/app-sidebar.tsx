@@ -55,16 +55,14 @@ export const AppSidebar = () => {
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild className="gap-x-4 h-10 px-4">
-                            <Link href="/" prefetch>
-                                <Image src="/logos/logo.svg" alt="Nodex" width={30} height={30} />
-                                <span className="font-semibold text-sm">Nodex</span>
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
+                <SidebarMenuItem>
+                    <SidebarMenuButton asChild className="gap-x-4 h-10 px-4">
+                        <Link href="/" prefetch>
+                            <Image src="/logos/logo.svg" alt="Nodex" width={30} height={30} />
+                            <span className="font-semibold text-sm">Nodex</span>
+                        </Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
             </SidebarHeader>
             <SidebarContent>
                 {menuItems.map((group) => (
@@ -90,7 +88,7 @@ export const AppSidebar = () => {
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             ))}
-                         </SidebarMenu>
+                          </SidebarMenu>
                         </SidebarGroupContent>
                     </SidebarGroup>
                 ))}
