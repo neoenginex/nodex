@@ -8,7 +8,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client"
 import { toast } from "sonner";
 
-const Page = () => {
+  const Page = () => {
   const trpc = useTRPC();
   const { data } = useQuery(trpc.getWorkflows.queryOptions());
   const queryClient = useQueryClient(); 
@@ -16,6 +16,9 @@ const Page = () => {
   const testAi = useMutation(trpc.testAi.mutationOptions({
     onSuccess: () => {
       toast.success("AI Job Queued");
+    },
+    onError: () => {
+      toast.error("Something went wrong.")
     }
   }));
 
