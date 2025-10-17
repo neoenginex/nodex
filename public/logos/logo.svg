@@ -1,1 +1,12 @@
-<svg id="logo-38" width="78" height="32" viewBox="0 0 78 32" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M55.5 0H77.5L58.5 32H36.5L55.5 0Z" class="ccustom" fill="#FF7A00"></path> <path d="M35.5 0H51.5L32.5 32H16.5L35.5 0Z" class="ccompli1" fill="#FF9736"></path> <path d="M19.5 0H31.5L12.5 32H0.5L19.5 0Z" class="ccompli2" fill="#FFBC7D"></path> </svg>
+<svg width="500" height="500" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_248_32)">
+<path d="M73.6908 355.738L74.5943 158.595C182.853 221.155 242.907 335.362 242.104 452.971L73.6908 355.738Z" fill="white"/>
+<path d="M426.184 355.892L425.282 158.985C317.153 221.47 257.172 335.54 257.973 453.008L426.184 355.892Z" fill="white"/>
+<path d="M247.639 48.5912L416.862 147.329C309.225 209.417 181.09 204.354 80.2676 145.223L247.639 48.5912Z" fill="white"/>
+</g>
+<defs>
+<clipPath id="clip0_248_32">
+<rect width="500" height="500" fill="white"/>
+</clipPath>
+</defs>
+</svg>
