@@ -3,6 +3,7 @@ import { createTRPCRouter, protectedProcedure, premiumProcedure } from "@/trpc/i
 import prisma from "@/lib/db";
 import z from "zod";
 import { PAGINATION } from "@/config/constants";
+import { TRPCError } from "@trpc/server";
 
 export const workflowsRouter = createTRPCRouter({
     create: premiumProcedure.mutation(({ ctx }) => {
@@ -15,14 +16,22 @@ export const workflowsRouter = createTRPCRouter({
     }),
     remove: protectedProcedure
         .input(z.object({ id: z.string() }))
-        .mutation(({ ctx, input }) => {
-        return prisma.workflow.delete({
-            where: {
-                id: input.id,
-                userId: ctx.auth.user.id,
-            },
-        })
-    }),
+        .mutation(async ({ ctx, input }) => {
+            const workflow = await prisma.workflow.findUnique({
+                where: { id: input.id }
+            });
+
+            if (!workflow || workflow.userId !== ctx.auth.user.id) {
+                throw new TRPCError({
+                    code: "NOT_FOUND",
+                    message: "Workflow not found or unauthorized",
+                });
+            }
+
+            return prisma.workflow.delete({
+                where: { id: input.id },
+            });
+        }),
     updateName: protectedProcedure
         .input(z.object({ id: z.string(), name: z.string().min(1) }))
         .mutation(({ ctx, input }) => {
