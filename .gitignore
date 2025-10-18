@@ -44,3 +44,7 @@ next-env.d.ts
 
 # Sentry Config File
 .env.sentry-build-plugin
+
+# .md
+
+TRPC_REFACTOR_NOTES.md

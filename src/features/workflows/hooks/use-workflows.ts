@@ -1,30 +1,39 @@
 import { useWorkflowsParams } from "@/hooks/use-workflows-params";
-import { useTRPC } from "@/trpc/client"
-import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { trpc } from "@/trpc/client"
 import { toast } from "sonner";
 
 export const useSuspenseWorkflows = () => {
-    const trpc = useTRPC();
     const [params] = useWorkflowsParams();
 
-    return useSuspenseQuery(trpc.workflows.getMany.queryOptions(params));
+    return trpc.workflows.getMany.useSuspenseQuery(params);
 };
 
 export const useCreateWorkflow = () => {
-    const queryClient = useQueryClient();
-    const trpc = useTRPC();
+    const utils = trpc.useUtils();
 
-    return useMutation(
-        trpc.workflows.create.mutationOptions({
-            onSuccess: (data) => {
-                toast.success(`Workflow "${data.name}" created.`);
-                queryClient.invalidateQueries(
-                    trpc.workflows.getMany.queryOptions({}),
-                );
-            },
-            onError: (error) => {
-                toast.error(`Failed to create workflow: ${error.message}`);
-            },
-        }),
-    );
+    return trpc.workflows.create.useMutation({
+        onSuccess: (data) => {
+            toast.success(`Workflow "${data.name}" created.`);
+            utils.workflows.getMany.invalidate();
+        },
+        onError: (error: any) => {
+            toast.error(`Failed to create workflow: ${error.message}`);
+        },
+    });
+};
+
+
+export const useRemoveWorkflow = () => {
+    const utils = trpc.useUtils();
+
+    return trpc.workflows.remove.useMutation({
+        onSuccess: (data) => {
+            toast.success(`Workflow "${data.name}" removed.`);
+            utils.workflows.getMany.invalidate();
+            utils.workflows.getOne.invalidate({ id: data.id });
+        },
+        onError: (error: any) => {
+            toast.error(`Failed to remove workflow: ${error.message}`);
+        },
+    });
 };
