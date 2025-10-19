@@ -4,6 +4,8 @@ import prisma from "@/lib/db";
 import z from "zod";
 import { PAGINATION } from "@/config/constants";
 import { TRPCError } from "@trpc/server";
+import { NodeType } from "@/generated/prisma";
+import { Node as FlowNode, Edge } from "@xyflow/react";
 
 export const workflowsRouter = createTRPCRouter({
     create: premiumProcedure.mutation(({ ctx }) => {
@@ -11,6 +13,13 @@ export const workflowsRouter = createTRPCRouter({
             data: {
                 name: generateSlug(3),
                 userId: ctx.auth.user.id,
+                node: {
+                    create: {
+                        type: NodeType.INITIAL,
+                        position: { x: 0, y: 0 },
+                        name: NodeType.INITIAL,
+                    }
+                }
             },
         });
     }),
@@ -44,17 +53,45 @@ export const workflowsRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
         const workflow = await prisma.workflow.findUnique({
-            where: { id: input.id }
+            where: { id: input.id },
+            include: { node: true, connections: true },
         });
 
-        if (!workflow || workflow.userId !== ctx.auth.user.id) {
+        if (!workflow) {
             throw new TRPCError({
                 code: "NOT_FOUND",
-                message: "Workflow not found",
+                message: `Workflow with id ${input.id} not found`,
             });
         }
 
-        return workflow;
+        if (workflow.userId !== ctx.auth.user.id) {
+            throw new TRPCError({
+                code: "FORBIDDEN",
+                message: "You do not have access to this workflow",
+            });
+        }
+
+        const nodes: FlowNode[] = workflow.node.map((node) => ({
+            id: node.id,
+            type: node.type,
+            position: node.position as { x: number, y: number },
+            data: (node.data as Record<string, unknown>) || {},
+        }));
+
+        const edges: Edge[] = workflow.connections.map((connection) => ({
+            id: connection.id,
+            source: connection.fromNodeId,
+            target: connection.toNodeId,
+            sourceHandle: connection.fromOutput,
+            targetHandle: connection.toInput,
+        }));
+
+        return {
+            id: workflow.id,
+            name: workflow.name,
+            nodes,
+            edges,
+        };
     }),
     getMany: protectedProcedure
         .input(

@@ -2,11 +2,11 @@
 
 import {
     CreditCardIcon,
-    FolderOpenIcon,
     HistoryIcon,
-    KeyIcon,
+    KeySquareIcon,
     LogOutIcon,
     StarIcon,
+    SquareMousePointerIcon,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -32,12 +32,12 @@ const menuItems = [
         items: [
             {
                 title: "Workflows",
-                icon: FolderOpenIcon,
+                icon: SquareMousePointerIcon,
                 url: "/workflows"
             },
             {
                 title: "Credentials",
-                icon: KeyIcon,
+                icon: KeySquareIcon,
                 url: "/credentials",
             },
             {
@@ -55,7 +55,7 @@ export const AppSidebar = () => {
     const { hasActiveSubscription, isLoading } = useHasActiveSubscription();
 
     return (
-        <Sidebar collapsible="icon">
+        <Sidebar collapsible="icon" style={{ backgroundColor: 'hsl(var(--background))' }}>
             <SidebarHeader>
                 <SidebarMenuItem>
                     <SidebarMenuButton asChild className="gap-x-4 h-10 px-4">
